@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{{post["description"][:50]}}
+{% endblock %}
+
+{% block content %}
+{% if post %}
+
+<div class="p-5 md:px-52">
+    <div class="text-white">
+        {% include "partials/single_post.html" %}
+    </div>
+
+    <div class="py-3 hidden">
+        <!-- Form to take comment -->
+        <form action="/a/{{post['id']}}/comment" method="POST">
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="commentbox">
+                        Comment
+                    </label>
+                    <input
+                            type="text"
+                        class="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                        id="commentbox" name="comment" placeholder="Comment"></input>
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-3 mb-6">
+                <div class="w-full px-3">
+                    <button
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="submit">
+                        Comment
+                    </button>
+                </div>
+            </div>
+        </form>
+        <!-- End of form -->
+
+        <!-- Comments -->
+        {% if comments %}
+        {% for comment in comments %}
+        <div class="flex flex-wrap -mx-3 mb-6">
+            <div class="w-full px-3">
+                <div class="flex items-center mb-3">
+                    <img alt="{{comment['author']}}" class="rounded-full w-10 h-10 mr-2" src="{{comment['image']}}">
+                    <div class="text-white font-raleway font-semibold">{{comment['author']}}</div>
+                    <div class="text-gray-400 ml-2 mt-2 font-raleway text-sm">{{comment['date']}}</div>
+                </div>
+                <p class="text-sm text-white">{{comment["comment"]}}</p>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% else %}
+<h1 class="text-white text-9xl font-bold ">Post Not found</h1>
+
+{% endif %}
+{% endblock %}

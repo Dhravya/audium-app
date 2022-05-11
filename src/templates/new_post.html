@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+New Post
+{% endblock %}
+
+{% block content %}
+
+<div class="grid place-items-center text-white font-raleway font-semibold text-3xl">
+    Create new post
+</div>
+
+<div class="p-5 md:px-24 container mx-auto">
+    <form action="/new" method="POST" enctype="multipart/form-data">
+        <div class="mb-6">
+            <label for="description"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Description</label>
+            <input type="text" id="description" required name="description"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="What is the audio about?">
+        </div>
+
+        <!-- Grid with 3 columns -->
+        <div id="inputs" class="md:grid md:grid-cols-3 md:gap-4 ">
+            <!-- Audio (and record option besides it) -->
+            <div id="fileInput" class="flex mb-6">
+                <label for="audio" class="block m-3 text-sm font-medium text-gray-900 dark:text-gray-300">Audio</label>
+                <input type="file" id="audio" name="audio"
+                    class="bg-blue-500 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Submit audio" accept=".mp3,audio/*">
+            </div>
+
+            <!-- OR -->
+            <div id="linkInput" class="flex mb-6">
+                <label for="audio" class="block m-3 text-sm font-medium text-gray-900 dark:text-gray-300">OR</label>
+                <input type="text" id="audio_url" name="audio_url"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Paste link to audio">
+            </div>
+
+            <!-- OR record here-->
+            <div id="recordInput" class="flex mb-6">
+                <p class="text-white m-3">OR (Beta feature, high chances that it won't work.)</p>
+                <button class="bg-blue-500 rounded-lg p-2.5 w-24" type="button" id="record">Record</button>
+                <button class="bg-green-500 rounded-lg p-2.5 w-24" type="button" id="stopRecord" disabled>Stop</button>
+
+                <audio id="recordedAudio"></audio>
+            </div>
+        </div>
+
+        <!-- Colour selection menu -->
+        <div class="mb-6">
+            <label for="colour" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Colour</label>
+            <select id="colour" name="colour" required
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="yellow">Yellow</option>
+            </select>
+        </div>
+
+        <!-- Hashtag selection menu -->
+        <div class="mb-6">
+            <label for="hashtag" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Hashtag</label>
+            <select id="hashtag" name="hashtag" required
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                {% for hashtag in hashtags %}
+                <option value="{{hashtag}}">{{hashtag.capitalize()}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <p id="info"></p>
+
+        <button type="button" id="submitBtnRecorded" hidden onclick="submitRecorded()"
+            class="text-white bg-green-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:bg-slate-500 disabled:hover:bg-slate-500 disabled:cursor-not-allowed">Submit
+            Recorded</button>
+        <button id="submitBtn" type="submit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:bg-slate-500 disabled:hover:bg-slate-500 disabled:cursor-not-allowed">Submit</button>
+
+    </form>
+</div>
+
+
+
+<script>
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        handlerFunction(stream);
+    });
+    let blob = null;
+    function handlerFunction(stream) {
+        rec = new MediaRecorder(stream);
+        rec.ondataavailable = (e) => {
+            audioChunks.push(e.data);
+            if (rec.state == "inactive") {
+                let blob_ = new Blob(audioChunks, { type: "audio/mp3" });
+                let recordedAudio = document.getElementById("recordedAudio");
+                recordedAudio.src = URL.createObjectURL(blob_);
+                recordedAudio.controls = true;
+                recordedAudio.autoplay = true;
+
+                info.innerHTML = "Recording finished. Click to upload.";
+                document.getElementById("submitBtnRecorded").hidden = false;
+                document.getElementById("submitBtn").hidden = true;
+
+                blob = blob_;
+            };
+        }
+    }
+    function sendData() {
+        if (blob == null) {
+            alert('There is no audio?')
+        }
+        let formData = new FormData();
+        formData.append("audio", blob);
+        const description = document.getElementById("description").value;
+
+        if (blob == null | blob == "" | blob == undefined) {
+            alert("Please record a sound first.");
+            return;
+        }
+
+        if (
+            (description.length < 0) |
+            (description == "") |
+            (description == null) |
+            (description == undefined)
+        ) {
+            alert("Please enter a description");
+            return;
+        }
+        formData.append("description", description)
+
+        const color = document.getElementById('colour').value
+
+        if (color) {
+            formData.append("colour", color)
+        }
+
+        if (hashtag) {
+            formData.append("hashtag", hashtag)
+        }
+
+        fetch("/new", {
+            method: "POST",
+            body: formData,
+            headers: { 'secret': document.getElementById("secret").value }
+        }).then((response) => {
+            if (response.ok) {
+                window.location.href = "/";
+            } else {
+                alert("Something went wrong");
+            }
+        });
+    }
+
+    function submitRecorded() {
+        sendData(blob);
+    }
+
+    record.onclick = (e) => {
+        record.disabled = true;
+        record.style.backgroundColor = "blue";
+        stopRecord.disabled = false;
+        audioChunks = [];
+        rec.start();
+    };
+    stopRecord.onclick = (e) => {
+        record.disabled = false;
+        stop.disabled = true;
+        record.style.backgroundColor = "red";
+        rec.stop();
+    };
+
+</script>
+
+{% endblock %}

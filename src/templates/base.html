@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %} | Audium </title>
+    <link rel="stylesheet" href="../static/css/output.css">
+    <link rel="stylesheet" href="../static/css/audio.css">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-slate-900">
+        <nav id="header" class="h-16 fixed top-0 w-full bg-slate-900 z-50">
+            <!-- Name in the center -->
+            <div class="container max-w-6xl mx-auto flex h-full justify-between">
+                <div
+                    class="relative ml-6 md:ml-2 inline-grid text-slate-200  text-4xl font-raleway font-semibold justify-center items-center">
+                    <a href="/">auDium</a>
+                </div>
+
+                {% include "./partials/icons.html" %}
+            </div>
+        </nav>
+
+        <div class="h-16"></div>
+
+        {%block content%}
+        {%endblock%}
+</body>
+
+<script src="../static/js/player.js"></script>
+<!-- <script src="../static/js/likehandler.js"></script> -->
+
+</html>

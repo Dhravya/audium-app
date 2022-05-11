@@ -1,0 +1,28 @@
+<div id="{{post['$id']}}" class="py-3 relative">
+    <div class="absolute w-full h-56 rounded-md bg-{{post['colour']}}-700 opacity-20 border border-slate-500 z-0">
+    </div>
+    <div class="backdrop-filter h-56 backdrop-blur-md rounded-md w-full border border-slate-500 z-10">
+        <div class=" p-5">
+            <a title="{{post['description']}}" href="/a/{{post['$id']}}">
+                <div class="flex items-center mb-3">
+                    <img alt="{{post['uploader']}}" class="rounded-full w-10 h-10 mr-2"
+                        src="{{post['picture']}}">
+                    <div class="text-white font-raleway font-semibold">{{post['uploader']}}</div>
+                    <div class="text-gray-400 ml-2 mt-2 font-raleway text-sm">{{post['date']}}</div>
+                </div>
+                <p class="text-sm truncate">{{post["description"]}}</p>
+            </a>
+            <br>
+            <!-- Take half of the screen only -->
+            {% if post['hashtag'] %}
+            <a class="text-white font-raleway font-semibold mt-10 mr-2 bg-blue-500 rounded-md p-2 mb-6"
+                href="https://example.com/{{post['hashtag']}}">
+                #{{post['hashtag']}}
+            </a>
+            {% endif %}
+            <br>
+            {% include './partials/player.html' %}
+        </div>
+    </div>
+    <br>
+</div>

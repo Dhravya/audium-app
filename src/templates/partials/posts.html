@@ -1,0 +1,7 @@
+<div class="5posts ">
+    {% if posts %}
+    {% for post in posts %}
+        {% include "partials/single_post.html" %}
+    {% endfor %}
+    {% endif %}
+</div>

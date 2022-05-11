@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .navBtn {
+    @apply cursor-pointer hover:scale-125 transition-all duration-150 ease-out mr-2 md:mr-3 h-6 w-6 text-blue-200;
+  }
+}

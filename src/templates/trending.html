@@ -1,0 +1,23 @@
+{%extends "base.html"%}
+
+    
+{% block title %}
+    Trending
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="text-white p-4 md:px-52">
+        <h4 class="text-2xl mb-2">Hashtags</h4>
+        {% if hashtags %}
+        {% for hashtag in hashtags %}
+        <a href="https://example.com/{{hashtag}}" class="text-slate-200 hover:text-slate-300 text-md mt-4">{{ hashtag
+            }}</a>
+        {% endfor %}
+        {% endif %}
+
+        <h4 class="text-2xl mb-2 mt-3">Posts</h4>
+        {% include 'partials/posts.html'   %}
+    </div>
+</main>
+{% endblock %}

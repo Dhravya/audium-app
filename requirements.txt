@@ -1,0 +1,3 @@
+flask
+appwrite
+python-dotenv

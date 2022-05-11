@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{{user}}
+{% endblock %}
+
+{% block content %}
+
+<!-- Profile section -->
+<div class="items-center flex flex-col w-full">
+    <div class="h-64 overflow-hidden">
+
+        <img src="https://picsum.photos/1080/400" alt="" class=" mx-auto relative border border-slate-500">
+
+    </div>
+    <div class="absolute mt-16 sm:mt-36 md:mt-44 lg:mt-52">
+    <div class="rounded-full flex items-center justify-center">
+        <img class='w-32 h-32 rounded-full' src="{{user['userinfo']['picture']}}" alt="">
+    </div>
+    <!-- Name -->
+    <div class="text-center text-white font-raleway font-semibold relative text-3xl">
+        {{user['userinfo']['given_name']}}
+    </div>
+</div>
+<!-- Posts section -->
+<div class="mt-4 md:mt-24 p-5 mx-8 text-white container">
+    {% include "./partials/posts.html" %}
+</div>
+</div>
+
+
+
+{% endblock %}
